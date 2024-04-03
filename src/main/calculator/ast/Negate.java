@@ -18,7 +18,7 @@ public class Negate extends UnaryOp {
 
     @Override
     public String getStringRepresentation() {
-        return String.format("-(%s)", op.getStringRepresentation());
+        return String.format("(-%s)", op.getStringRepresentation());
     }
 
     @Override

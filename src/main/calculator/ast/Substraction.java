@@ -16,7 +16,7 @@ public class Substraction extends BinOp {
     }
     @Override
     public String getStringRepresentation() {
-        return String.format("%s-(%s)", left.getStringRepresentation(), right.getStringRepresentation());
+        return String.format("(%s-%s)", left.getStringRepresentation(), right.getStringRepresentation());
     }
 
     @Override

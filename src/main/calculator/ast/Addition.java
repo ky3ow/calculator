@@ -2,8 +2,6 @@ package ast;
 
 public class Addition extends BinOp {
 
-    protected static String symbol = "+";
-
     public Addition (AST left, AST right) {
         super(left, right);
     }
@@ -18,7 +16,7 @@ public class Addition extends BinOp {
     }
     @Override
     public String getStringRepresentation() {
-        return String.format("%s+%s", left.getStringRepresentation(), right.getStringRepresentation());
+        return String.format("(%s+%s)", left.getStringRepresentation(), right.getStringRepresentation());
     }
 
     @Override
