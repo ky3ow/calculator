@@ -1,0 +1,30 @@
+<Configuration status="debug" name="baeldung" packages="">
+    <Appenders>
+        <File name="fout" filename="info.log" append="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
+            </PatternLayout>
+        </File>
+        <SMTP name="mail" subject="Error log"
+              to="${env:email}"
+              from="${env:email}"
+              smtpHost="smtp.gmail.com"
+              smtpPort="587"
+              bufferSize="50"
+              smtpPassword="${env:pass}"
+              smtpUsername="${env:email}"
+              smtpProtocol="smtp"
+        >
+            <HtmlLayout />
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
+            </PatternLayout>
+        </SMTP>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="fout"/>
+            <AppenderRef ref="mail"/>
+        </Root>
+    </Loggers>
+</Configuration>
