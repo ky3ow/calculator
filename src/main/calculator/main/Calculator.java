@@ -2,6 +2,7 @@ package main;
 
 import javax.swing.*;
 
+import ast.AST;
 import interpreter.Parser;
 import interpreter.Token;
 import interpreter.Tokenizer;
@@ -216,13 +217,14 @@ public class Calculator implements ActionListener {
                 Parser par = new Parser();
                 par.setInput(tokens);
                 String output;
+                AST derivative = par.expr().getDerivative().simplify();
 
                 if (state.equals("symbolic")){ // 2
-                    output = par.expr().getDerivative().getStringRepresentation();
+                    output = derivative.getStringRepresentation();
                 } else {
                     if (setVariable.getText().equals("")) setVariable.setText("0");
                     double value = Double.parseDouble(setVariable.getText());
-                    output = "" + par.expr().getDerivative().getNumericResult(value);
+                    output = "" + derivative.getNumericResult(value);
                 }
 
                 if (output.equals("NaN")) output = "Ділення на 0 або корінь з від'ємного числа";

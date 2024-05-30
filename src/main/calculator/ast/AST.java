@@ -7,4 +7,6 @@ public interface AST {
 
     public AST getDerivative();
 
+    public AST simplify();
+
 }

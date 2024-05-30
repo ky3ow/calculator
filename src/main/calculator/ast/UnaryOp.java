@@ -6,4 +6,10 @@ public abstract class UnaryOp implements AST {
     UnaryOp(AST op) {
         this.op = op;
     }
+
+    @Override
+    public AST simplify() {
+        op = op.simplify();
+        return this;
+    }
 }

@@ -21,6 +21,11 @@ public class Variable implements AST {
     public AST getDerivative() {
         return new Const("1");
     }
+
+    @Override
+    public AST simplify() {
+        return this;
+    }
 }
 
 

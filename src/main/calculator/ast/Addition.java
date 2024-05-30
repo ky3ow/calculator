@@ -26,5 +26,26 @@ public class Addition extends BinOp {
                 right.getDerivative()
         );
     }
+
+    @Override
+    public AST simplify() {
+        left = left.simplify();
+        right = right.simplify();
+
+        if (left instanceof Const && ((Const) left).isZero()) {
+            return right;
+        }
+
+        if (right instanceof Const && ((Const) right).isZero()) {
+            return left;
+        }
+
+        if (left instanceof Const && right instanceof Const) {
+            double sum = ((Const) left).getNumericResult(0) + ((Const) right).getNumericResult(0);
+            return new Const(String.valueOf(sum));
+        }
+
+        return this;
+    }
 }
 

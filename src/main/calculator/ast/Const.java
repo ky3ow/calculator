@@ -8,6 +8,14 @@ public class Const implements AST {
         this.value = value;
     }
 
+    public boolean isZero() {
+       return value.equals("0");
+    }
+
+    public boolean isOne() {
+        return value.equals("1");
+    }
+
     @Override
     public String toString() {
         return String.format("Number: %s", value);
@@ -26,5 +34,10 @@ public class Const implements AST {
     @Override
     public AST getDerivative() {
         return new Const("0");
+    }
+
+    @Override
+    public AST simplify() {
+        return this;
     }
 }

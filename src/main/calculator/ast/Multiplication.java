@@ -32,5 +32,23 @@ public class Multiplication extends BinOp {
                 )
         );
     }
+
+    @Override
+    public AST simplify() {
+        left = left.simplify();
+        right = right.simplify();
+
+        if (left instanceof Const && ((Const) left).isZero() || right instanceof Const && ((Const) right).isZero()) {
+            return new Const("0");
+        }
+        if (left instanceof Const && ((Const) left).isOne()) {
+            return right;
+        }
+        if (right instanceof Const && ((Const) right).isOne()) {
+            return left;
+        }
+
+        return this;
+    }
 }
 

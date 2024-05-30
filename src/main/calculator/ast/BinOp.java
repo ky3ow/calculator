@@ -14,5 +14,11 @@ public abstract class BinOp implements AST {
         return String.format("BinOp {\n  left {\n  %s\n}\n  right {\n  %s\n}\n}",left, right);
     }
 
+    @Override
+    public AST simplify() {
+        left = left.simplify();
+        right = right.simplify();
+        return this;
+    }
 }
 
