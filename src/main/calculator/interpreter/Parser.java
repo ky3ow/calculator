@@ -33,13 +33,13 @@ public class Parser {
 
     }
 
+    // operand:  (MINUS) operand | VARIABLE | NUMBER |  L_PAREN expr R_PAREN  |  FUNC L_PAREN expr R_PAREN
     public AST operand() {
-        // operand:  (UNARY_MINUS) operand | VARIABLE | NUMBER |  L_PAREN expr R_PAREN  |  FUNC L_PAREN expr R_PAREN
         Token token = this.currentToken;
 
         switch (token.getType()) {
-            case "U_MINUS" -> {
-                eat("U_MINUS");
+            case "MINUS" -> {
+                eat("MINUS");
                 return new Negate(operand());
             }
             case "NUMBER" -> {
@@ -82,8 +82,8 @@ public class Parser {
         }
     }
 
+    //  factor: operand ( ^ factor )*
     public AST factor() {
-
         AST node = operand();
 
         while (this.currentToken.getType().equals("RAISE")) {
@@ -95,6 +95,7 @@ public class Parser {
         return node;
     }
 
+    // term: factor ( MUL|DIV factor )*
     public AST term() {
 
         AST node = factor();
@@ -116,17 +117,7 @@ public class Parser {
 
     }
 
-    /*
-     **    expr: term ( PLUS|MINUS term )*
-     **
-     **    term: factor ( MUL|DIV factor )*
-     **
-     **    factor: operand ( ^ factor )*
-     **
-     **    operand:  (UNARY_MINUS) operand | VARIABLE | NUMBER |  L_PAREN expr R_PAREN  |  FUNC L_PAREN expr R_PAREN
-     **
-     */
-
+    // expr: term ( PLUS|MINUS term )*
     public AST expr() {
 
         AST node = term();
@@ -150,6 +141,16 @@ public class Parser {
     }
 
 
+    /*
+     **    expr: term ( PLUS|MINUS term )*
+     **
+     **    term: factor ( MUL|DIV factor )*
+     **
+     **    factor: operand ( ^ factor )*
+     **
+     **    operand:  (UNARY_MINUS) operand | VARIABLE | NUMBER |  L_PAREN expr R_PAREN  |  FUNC L_PAREN expr R_PAREN
+     **
+     */
     public Parser() {
         this.cursor = 0;
         this.input = null;

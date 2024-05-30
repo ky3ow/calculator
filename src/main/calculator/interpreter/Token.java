@@ -2,8 +2,8 @@ package interpreter;
 
 public class Token {
 
-    private String type;
-    private String value;
+    private final String type;
+    private final String value;
 
     Token (String type, String value) {
         this.type = type;

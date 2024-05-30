@@ -35,5 +35,21 @@ public class Pow extends BinOp {
                left.getDerivative()
         );
     }
+
+    @Override
+    public AST simplify() {
+        left = left.simplify();
+        right = right.simplify();
+
+        if (right instanceof Const && ((Const) right).isOne()) {
+            return left;
+        }
+
+        if (right instanceof Const && ((Const) right).isZero()) {
+            return new Const(String.valueOf(1));
+        }
+
+        return this;
+    }
 }
 

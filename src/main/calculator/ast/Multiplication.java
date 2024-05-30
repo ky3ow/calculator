@@ -38,6 +38,18 @@ public class Multiplication extends BinOp {
         left = left.simplify();
         right = right.simplify();
 
+        // Negations
+        if (left instanceof Negate && right instanceof Negate) {
+            return new Multiplication(((Negate) left).op, ((Negate) right).op).simplify();
+        }
+        if (left instanceof Negate) {
+           return new Negate(new Multiplication(((Negate) left).op, right)).simplify();
+        }
+        if (right instanceof Negate) {
+            return new Negate(new Multiplication(left, ((Negate) right).op)).simplify();
+        }
+
+        // Constants
         if (left instanceof Const && ((Const) left).isZero() || right instanceof Const && ((Const) right).isZero()) {
             return new Const("0");
         }
@@ -46,6 +58,33 @@ public class Multiplication extends BinOp {
         }
         if (right instanceof Const && ((Const) right).isOne()) {
             return left;
+        }
+
+        // Collapse numbers
+        if (left instanceof Const && right instanceof Const) {
+            double collapsed = left.getNumericResult(0) * right.getNumericResult(0);
+            return new Const(String.valueOf(collapsed));
+        }
+
+        // Collapse numbers in nested multiplications
+        if (left instanceof Const && right instanceof Multiplication rightMult) {
+            if (rightMult.left instanceof Const) {
+                double collapsed = left.getNumericResult(0) * rightMult.left.getNumericResult(0);
+                return new Multiplication(new Const(String.valueOf(collapsed)), rightMult.right).simplify();
+            } else if (rightMult.right instanceof Const) {
+                double collapsed = left.getNumericResult(0) * rightMult.right.getNumericResult(0);
+                return new Multiplication(new Const(String.valueOf(collapsed)), rightMult.left).simplify();
+            }
+        }
+
+        if (right instanceof Const && left instanceof Multiplication leftMult) {
+            if (leftMult.left instanceof Const) {
+                double collapsed = right.getNumericResult(0) * leftMult.left.getNumericResult(0);
+                return new Multiplication(new Const(String.valueOf(collapsed)), leftMult.right).simplify();
+            } else if (leftMult.right instanceof Const) {
+                double collapsed = right.getNumericResult(0) * leftMult.right.getNumericResult(0);
+                return new Multiplication(new Const(String.valueOf(collapsed)), leftMult.left).simplify();
+            }
         }
 
         return this;

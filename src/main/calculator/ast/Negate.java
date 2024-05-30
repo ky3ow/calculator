@@ -26,5 +26,19 @@ public class Negate extends UnaryOp {
         return new Negate(op.getDerivative());
     }
 
+    @Override
+    public AST simplify() {
+        op = op.simplify();
+
+        if (op instanceof Negate) {
+            return ((Negate) op).op;
+        }
+
+        if (op instanceof Const && ((Const) op).isZero()) {
+            return op;
+        }
+
+        return this;
+    }
 }
 

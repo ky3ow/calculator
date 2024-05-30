@@ -8,19 +8,7 @@ public class Tokenizer {
     private static final Set<String> operators = Set.of(
             "+", "-", "*", "/", "^", "(", ")" );
 
-    // checks if '-' sign is unary, unary -> true, binary -> false
-    private static boolean unaryMinusCheck(ArrayList<Token> tokens) {
-        if (!tokens.isEmpty()) {
-            Token previousToken = tokens.getLast();
-
-            return !previousToken.getType().equals("NUMBER")
-                    && !previousToken.getType().equals("VARIABLE")
-                    && !previousToken.getType().equals("R_PAREN");
-        }
-        return true;
-    }
-
-    // checks if there is omitted multiplication in expression (e.g 5x = 5*x)
+    // checks if there is omitted multiplication in expression (e.g. 5x = 5*x)
     private static boolean omittedMultiplication(ArrayList<Token> tokens) {
         if (!tokens.isEmpty()) {
 
@@ -65,11 +53,7 @@ public class Tokenizer {
 
                     switch (symbol) {
                         case '-':
-                            if (unaryMinusCheck(tokens)) {
-                                tokens.add(new Token("U_MINUS", "-"));
-                            } else {
-                                tokens.add(new Token("MINUS", "-"));
-                            }
+                            tokens.add(new Token("MINUS", "-"));
                             break;
                         case '+':
                             tokens.add(new Token("PLUS", "+"));

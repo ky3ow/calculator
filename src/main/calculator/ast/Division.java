@@ -38,5 +38,34 @@ public class Division extends BinOp {
                 )
         );
     }
+
+    @Override
+    public AST simplify() {
+        left = left.simplify();
+        right = right.simplify();
+
+        // Negations
+        if (left instanceof Negate && right instanceof Negate) {
+            return new Division(((Negate) left).op, ((Negate) right).op).simplify();
+        }
+        if (left instanceof Negate) {
+            return new Negate(new Division(((Negate) left).op, right)).simplify();
+        }
+        if (right instanceof Negate) {
+            return new Negate(new Division(left, ((Negate) right).op)).simplify();
+        }
+
+        if (right instanceof Const && ((Const) right).isOne()) {
+            return left;
+        }
+
+        // Collapse numbers
+        if (left instanceof Const && right instanceof Const) {
+            double collapsed = left.getNumericResult(0) / right.getNumericResult(0);
+            return new Const(String.valueOf(collapsed));
+        }
+
+        return this;
+    }
 }
 

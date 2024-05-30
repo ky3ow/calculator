@@ -9,11 +9,11 @@ public class Const implements AST {
     }
 
     public boolean isZero() {
-       return value.equals("0");
+       return Double.parseDouble(value) == 0;
     }
 
     public boolean isOne() {
-        return value.equals("1");
+        return Double.parseDouble(value) == 1;
     }
 
     @Override

@@ -41,7 +41,7 @@ public class Substraction extends BinOp {
         }
 
         if (left instanceof Const && right instanceof Const) {
-            double sum = ((Const) left).getNumericResult(0) - ((Const) right).getNumericResult(0);
+            double sum = left.getNumericResult(0) - right.getNumericResult(0);
             return new Const(String.valueOf(sum));
         }
 
