@@ -201,7 +201,7 @@ public class Calculator implements ActionListener {
     }
 
     public static void main(String[] args) throws Exception {
-        Calculator calc = new Calculator();
+        new Calculator();
     }
 
     @Override
@@ -211,18 +211,19 @@ public class Calculator implements ActionListener {
         try {
             if (button.equals(equButton)) {   // 1
 
-                if (inputField.getText().equals("")) inputField.setText("0");
+                if (inputField.getText().isEmpty()) inputField.setText("0");
                 String text = inputField.getText();
                 ArrayList<Token> tokens = Tokenizer.TokenizeExpression(text);
                 Parser par = new Parser();
                 par.setInput(tokens);
                 String output;
                 AST derivative = par.expr().getDerivative().simplify();
+                System.out.println(derivative);
 
                 if (state.equals("symbolic")){ // 2
                     output = derivative.getStringRepresentation();
                 } else {
-                    if (setVariable.getText().equals("")) setVariable.setText("0");
+                    if (setVariable.getText().isEmpty()) setVariable.setText("0");
                     double value = Double.parseDouble(setVariable.getText());
                     output = "" + derivative.getNumericResult(value);
                 }
@@ -246,7 +247,7 @@ public class Calculator implements ActionListener {
 
                 String text = inputField.getText();
                 inputField.setText(text.substring(0, text.length()-1));
-                if (inputField.getText().equals("")) inputField.setText("0");
+                if (inputField.getText().isEmpty()) inputField.setText("0");
 
             } else if (button.equals(clrButton)) { // 5
 

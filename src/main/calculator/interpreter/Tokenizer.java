@@ -10,26 +10,24 @@ public class Tokenizer {
 
     // checks if '-' sign is unary, unary -> true, binary -> false
     private static boolean unaryMinusCheck(ArrayList<Token> tokens) {
-        if (tokens.size() > 0) {
-            Token previousToken = tokens.get(tokens.size() - 1);
+        if (!tokens.isEmpty()) {
+            Token previousToken = tokens.getLast();
 
-            if (previousToken.getType() == "NUMBER"
-                    ||  previousToken.getType() == "VARIABLE"
-                    ||  previousToken.getType() == "R_PAREN" ) {
-                return false;
-            }
+            return !previousToken.getType().equals("NUMBER")
+                    && !previousToken.getType().equals("VARIABLE")
+                    && !previousToken.getType().equals("R_PAREN");
         }
         return true;
     }
 
     // checks if there is omitted multiplication in expression (e.g 5x = 5*x)
     private static boolean omittedMultiplication(ArrayList<Token> tokens) {
-        if (tokens.size() > 0) {
+        if (!tokens.isEmpty()) {
 
-            Token previousToken = tokens.get(tokens.size() - 1);
-            boolean operandBehindX = previousToken.getType() == "NUMBER";
-            boolean parenthesisBehindX = previousToken.getType() == "R_PAREN";
-            boolean xBehindAnything = previousToken.getType() == "VARIABLE";
+            Token previousToken = tokens.getLast();
+            boolean operandBehindX = previousToken.getType().equals("NUMBER");
+            boolean parenthesisBehindX = previousToken.getType().equals("R_PAREN");
+            boolean xBehindAnything = previousToken.getType().equals("VARIABLE");
 
             return operandBehindX || parenthesisBehindX || xBehindAnything ;
         }
@@ -83,7 +81,7 @@ public class Tokenizer {
                             tokens.add(new Token("DIV", "/"));
                             break;
                         case '^':
-                            if (tokens.get(tokens.size() - 1).getValue().equals("" + 2.718)) {
+                            if (tokens.getLast().getValue().equals(String.valueOf(2.718))) {
                                 tokens.set(tokens.size() - 1, new Token("FUNC", "exp"));
                             } else {
                                 tokens.add(new Token("RAISE", "^"));
@@ -99,18 +97,18 @@ public class Tokenizer {
                     } break;
                 case "number":
 
-                    String number = "";
+                    StringBuilder number = new StringBuilder();
                     while (i < stringToTokenize.length()) {
                         char digit = stringToTokenize.charAt(i);
                         if (!checkType(digit).equals("number")) {
                             break;
                         }
-                        number += digit;
+                        number.append(digit);
                         i++;
                     }
 
                     fillMultiplication(tokens);
-                    tokens.add(new Token("NUMBER", number));
+                    tokens.add(new Token("NUMBER", number.toString()));
                     i--;
 
                     break;
@@ -124,33 +122,33 @@ public class Tokenizer {
 
                 case "function":
 
-                    String func = "";
+                    StringBuilder func = new StringBuilder();
 
                     while (i < stringToTokenize.length()) {
 
-                        if (func.equals("e") || func.equals("π")) break;
+                        if (func.toString().equals("e") || func.toString().equals("π")) break;
 
                         char letter = stringToTokenize.charAt(i);
 
                         if (checkType(letter).equals("operator") || checkType(letter).equals("number")) {
                             break;
                         }
-                        func += letter;
+                        func.append(letter);
                         i++;
 
                     }
 
                     fillMultiplication(tokens);
 
-                    switch(func) {
+                    switch(func.toString()) {
                         case "e":
-                            tokens.add(new Token("NUMBER", "" + 2.718));
+                            tokens.add(new Token("NUMBER", String.valueOf(2.718)));
                             break;
                         case "π":
-                            tokens.add(new Token("NUMBER", "" + 3.1415));
+                            tokens.add(new Token("NUMBER", String.valueOf(3.1415)));
                             break;
                         default:
-                            tokens.add(new Token("FUNC", func));
+                            tokens.add(new Token("FUNC", func.toString()));
                     }
 
                     i--;

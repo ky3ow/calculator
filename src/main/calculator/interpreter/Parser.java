@@ -22,7 +22,7 @@ public class Parser {
 
             this.currentToken = new Token("EOF", null);
 
-        } else if (this.currentToken.getType() == tokenType) {
+        } else if (this.currentToken.getType().equals(tokenType)) {
 
             this.currentToken = input.get(cursor);
             cursor++;
@@ -37,63 +37,48 @@ public class Parser {
         // operand:  (UNARY_MINUS) operand | VARIABLE | NUMBER |  L_PAREN expr R_PAREN  |  FUNC L_PAREN expr R_PAREN
         Token token = this.currentToken;
 
-        if (token.getType().equals("U_MINUS")) {
-            eat("U_MINUS");
-            return new Negate(operand());
-        } else if (token.getType().equals("NUMBER")) {
-            eat("NUMBER");
-            return new Const(token.getValue());
-        } else if (token.getType().equals("L_PAREN")) {
-            eat("L_PAREN");
-            AST node = expr();
-            eat("R_PAREN");
-            return node;
-        } else if (token.getType().equals("VARIABLE")) {
-            eat("VARIABLE");
-            return new Variable();
-        } else if(token.getType().equals("FUNC")) {
-            eat("FUNC");
-            eat("L_PAREN");
-            AST node = null;
-            switch (token.getValue()) {
-                case "sin":
-                    node = new Sin(expr());
-                    break;
-                case "asin":
-                    node = new Asin(expr());
-                    break;
-                case "cos":
-                    node = new Cos(expr());
-                    break;
-                case "acos":
-                    node = new Acos(expr());
-                    break;
-                case "tan":
-                    node = new Tan(expr());
-                    break;
-                case "atan":
-                    node = new Atan(expr());
-                    break;
-                case "cot":
-                    node = new Cot(expr());
-                    break;
-                case "acot":
-                    node = new Acot(expr());
-                    break;
-                case "√":
-                    node = new Sqrt(expr());
-                    break;
-                case "exp":
-                    node = new Exp(expr());
-                    break;
-                case "log":
-                    node = new Log(expr());
-                    break;
+        switch (token.getType()) {
+            case "U_MINUS" -> {
+                eat("U_MINUS");
+                return new Negate(operand());
             }
-            eat("R_PAREN");
-            return node;
-        } else {
-            return null;
+            case "NUMBER" -> {
+                eat("NUMBER");
+                return new Const(token.getValue());
+            }
+            case "L_PAREN" -> {
+                eat("L_PAREN");
+                AST node = expr();
+                eat("R_PAREN");
+                return node;
+            }
+            case "VARIABLE" -> {
+                eat("VARIABLE");
+                return new Variable();
+            }
+            case "FUNC" -> {
+                eat("FUNC");
+                eat("L_PAREN");
+                AST node = switch (token.getValue()) {
+                    case "sin" -> new Sin(expr());
+                    case "asin" -> new Asin(expr());
+                    case "cos" -> new Cos(expr());
+                    case "acos" -> new Acos(expr());
+                    case "tan" -> new Tan(expr());
+                    case "atan" -> new Atan(expr());
+                    case "cot" -> new Cot(expr());
+                    case "acot" -> new Acot(expr());
+                    case "√" -> new Sqrt(expr());
+                    case "exp" -> new Exp(expr());
+                    case "log" -> new Log(expr());
+                    default -> null;
+                };
+                eat("R_PAREN");
+                return node;
+            }
+            default -> {
+                return null;
+            }
         }
     }
 
