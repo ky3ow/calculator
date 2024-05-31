@@ -49,4 +49,14 @@ public class Const implements AST {
     public AST simplify() {
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Const aConst = (Const) o;
+
+        return value.equals(aConst.value);
+    }
 }
