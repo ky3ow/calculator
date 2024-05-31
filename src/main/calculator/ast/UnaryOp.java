@@ -8,6 +8,11 @@ public abstract class UnaryOp implements AST {
     }
 
     @Override
+    public double getNumericResult() {
+        return getNumericResult(0);
+    }
+
+    @Override
     public AST simplify() {
         op = op.simplify();
         return this;

@@ -27,7 +27,7 @@ public class Tan extends UnaryOp {
             op.getDerivative(),
             new Pow(
                     new Cos(op),
-                    new Const("2")
+                    new Const(2)
             )
         );
     }

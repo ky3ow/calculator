@@ -28,7 +28,7 @@ public class Cot extends UnaryOp {
                     op.getDerivative(),
                     new Pow(
                             new Sin(op),
-                            new Const("2")
+                            new Const(2)
                     )
             )
         );

@@ -32,37 +32,37 @@ public class Addition extends BinOp {
         left = left.simplify();
         right = right.simplify();
 
-        if (left instanceof Const && ((Const) left).isZero()) {
+        if (left instanceof Const l && l.isZero()) {
             return right;
         }
 
-        if (right instanceof Const && ((Const) right).isZero()) {
+        if (right instanceof Const r && r.isZero()) {
             return left;
         }
 
         if (left instanceof Const && right instanceof Const) {
-            double sum = left.getNumericResult(0) + right.getNumericResult(0);
-            return new Const(String.valueOf(sum));
+            double sum = left.getNumericResult() + right.getNumericResult();
+            return new Const(sum);
         }
 
         // Collapse numbers in nested additions
         if (left instanceof Const && right instanceof Addition rightAddition) {
             if (rightAddition.left instanceof Const) {
-                double collapsed = left.getNumericResult(0) + rightAddition.left.getNumericResult(0);
-                return new Addition(new Const(String.valueOf(collapsed)), rightAddition.right).simplify();
+                double collapsed = left.getNumericResult() + rightAddition.left.getNumericResult();
+                return new Addition(new Const(collapsed), rightAddition.right).simplify();
             } else if (rightAddition.right instanceof Const) {
-                double collapsed = left.getNumericResult(0) + rightAddition.right.getNumericResult(0);
-                return new Addition(new Const(String.valueOf(collapsed)), rightAddition.left).simplify();
+                double collapsed = left.getNumericResult() + rightAddition.right.getNumericResult();
+                return new Addition(new Const(collapsed), rightAddition.left).simplify();
             }
         }
 
         if (right instanceof Const && left instanceof Addition leftAddition) {
             if (leftAddition.left instanceof Const) {
-                double collapsed = right.getNumericResult(0) + leftAddition.left.getNumericResult(0);
-                return new Addition(new Const(String.valueOf(collapsed)), leftAddition.right).simplify();
+                double collapsed = right.getNumericResult() + leftAddition.left.getNumericResult();
+                return new Addition(new Const(collapsed), leftAddition.right).simplify();
             } else if (leftAddition.right instanceof Const) {
-                double collapsed = right.getNumericResult(0) + leftAddition.right.getNumericResult(0);
-                return new Addition(new Const(String.valueOf(collapsed)), leftAddition.left).simplify();
+                double collapsed = right.getNumericResult() + leftAddition.right.getNumericResult();
+                return new Addition(new Const(collapsed), leftAddition.left).simplify();
             }
         }
 

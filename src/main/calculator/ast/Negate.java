@@ -30,11 +30,11 @@ public class Negate extends UnaryOp {
     public AST simplify() {
         op = op.simplify();
 
-        if (op instanceof Negate) {
-            return ((Negate) op).op;
+        if (op instanceof Negate o) {
+            return o.op;
         }
 
-        if (op instanceof Const && ((Const) op).isZero()) {
+        if (op instanceof Const o && o.isZero()) {
             return op;
         }
 

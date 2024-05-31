@@ -32,17 +32,17 @@ public class Substraction extends BinOp {
         left = left.simplify();
         right = right.simplify();
 
-        if (left instanceof Const && ((Const) left).isZero()) {
+        if (left instanceof Const l && l.isZero()) {
             return right;
         }
 
-        if (right instanceof Const && ((Const) right).isZero()) {
+        if (right instanceof Const r && r.isZero()) {
             return left;
         }
 
         if (left instanceof Const && right instanceof Const) {
-            double sum = left.getNumericResult(0) - right.getNumericResult(0);
-            return new Const(String.valueOf(sum));
+            double sum = left.getNumericResult() - right.getNumericResult();
+            return new Const(sum);
         }
 
         return this;

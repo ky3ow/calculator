@@ -26,7 +26,7 @@ public class Sqrt extends UnaryOp {
         return new Division(
                 op.getDerivative(),
                 new Multiplication(
-                        new Const("2"),
+                        new Const(2),
                         new Sqrt(op)
                 )
         );

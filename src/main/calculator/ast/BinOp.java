@@ -9,6 +9,12 @@ public abstract class BinOp implements AST {
         this.left = left;
         this.right = right;
     }
+
+    @Override
+    public double getNumericResult() {
+        return getNumericResult(0);
+    }
+
     @Override
     public String toString() {
         return String.format("BinOp {\n  left {\n  %s\n}\n  right {\n  %s\n}\n}",left, right);

@@ -27,10 +27,10 @@ public class Asin extends UnaryOp {
                 op.getDerivative(),
                 new Sqrt(
                         new Substraction(
-                                new Const("1"),
+                                new Const(1),
                                 new Pow(
                                         op,
-                                        new Const("2")
+                                        new Const(2)
                                 )
                         )
                 )

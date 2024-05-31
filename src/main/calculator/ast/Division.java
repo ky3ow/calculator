@@ -34,7 +34,7 @@ public class Division extends BinOp {
                 ),
                 new Pow(
                         right,
-                        new Const("2")
+                        new Const(2)
                 )
         );
     }
@@ -45,24 +45,24 @@ public class Division extends BinOp {
         right = right.simplify();
 
         // Negations
-        if (left instanceof Negate && right instanceof Negate) {
-            return new Division(((Negate) left).op, ((Negate) right).op).simplify();
+        if (left instanceof Negate l && right instanceof Negate r) {
+            return new Division(l.op, r.op).simplify();
         }
-        if (left instanceof Negate) {
-            return new Negate(new Division(((Negate) left).op, right)).simplify();
+        if (left instanceof Negate l) {
+            return new Negate(new Division(l.op, right)).simplify();
         }
-        if (right instanceof Negate) {
-            return new Negate(new Division(left, ((Negate) right).op)).simplify();
+        if (right instanceof Negate r) {
+            return new Negate(new Division(left, r.op)).simplify();
         }
 
-        if (right instanceof Const && ((Const) right).isOne()) {
+        if (right instanceof Const r && r.isOne()) {
             return left;
         }
 
         // Collapse numbers
         if (left instanceof Const && right instanceof Const) {
-            double collapsed = left.getNumericResult(0) / right.getNumericResult(0);
-            return new Const(String.valueOf(collapsed));
+            double collapsed = left.getNumericResult() / right.getNumericResult();
+            return new Const(collapsed);
         }
 
         return this;

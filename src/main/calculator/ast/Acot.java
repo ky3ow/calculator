@@ -27,10 +27,10 @@ public class Acot extends UnaryOp {
                 new Division(
                     op.getDerivative(),
                     new Addition(
-                            new Const("1"),
+                            new Const(1),
                             new Pow(
                                     op,
-                                    new Const("2")
+                                    new Const(2)
                             )
                     )
             )

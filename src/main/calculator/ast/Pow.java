@@ -28,7 +28,7 @@ public class Pow extends BinOp {
                                left,
                                new Substraction(
                                        right,
-                                       new Const("1")
+                                       new Const(1)
                                )
                        )
                ),
@@ -41,12 +41,12 @@ public class Pow extends BinOp {
         left = left.simplify();
         right = right.simplify();
 
-        if (right instanceof Const && ((Const) right).isOne()) {
+        if (right instanceof Const r && r.isOne()) {
             return left;
         }
 
-        if (right instanceof Const && ((Const) right).isZero()) {
-            return new Const(String.valueOf(1));
+        if (right instanceof Const r && r.isZero()) {
+            return new Const(1);
         }
 
         return this;

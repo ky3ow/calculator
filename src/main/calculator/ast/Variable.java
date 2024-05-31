@@ -13,13 +13,18 @@ public class Variable implements AST {
     }
 
     @Override
+    public double getNumericResult() {
+        return getNumericResult(0);
+    }
+
+    @Override
     public String getStringRepresentation() {
         return "x";
     }
 
     @Override
     public AST getDerivative() {
-        return new Const("1");
+        return new Const(1);
     }
 
     @Override

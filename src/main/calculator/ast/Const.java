@@ -8,6 +8,10 @@ public class Const implements AST {
         this.value = value;
     }
 
+    public Const(double value) {
+        this.value = String.valueOf(value);
+    }
+
     public boolean isZero() {
        return Double.parseDouble(value) == 0;
     }
@@ -27,13 +31,18 @@ public class Const implements AST {
     }
 
     @Override
+    public double getNumericResult() {
+        return getNumericResult(0);
+    }
+
+    @Override
     public String getStringRepresentation() {
         return value;
     }
 
     @Override
     public AST getDerivative() {
-        return new Const("0");
+        return new Const(0);
     }
 
     @Override
