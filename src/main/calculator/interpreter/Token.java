@@ -1,5 +1,7 @@
 package interpreter;
 
+import java.util.Objects;
+
 public class Token {
 
     private final String type;
@@ -8,6 +10,17 @@ public class Token {
     Token (String type, String value) {
         this.type = type;
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Token token = (Token) o;
+
+        if (!type.equals(token.type)) return false;
+        return value.equals(token.value);
     }
 
     @Override
