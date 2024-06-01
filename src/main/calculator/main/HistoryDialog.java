@@ -17,7 +17,7 @@ public class HistoryDialog extends JDialog {
 
         // Populate table model
         for (Pair pair : pairs) {
-            model.addRow(new Object[]{pair.input, pair.output});
+            model.addRow(new Object[]{pair.input(), pair.output()});
         }
 
         // Create table with the model
