@@ -41,6 +41,12 @@ public class Pow extends BinOp {
         left = left.simplify();
         right = right.simplify();
 
+        if (right instanceof Const r && left instanceof Const l) {
+            return new Const(
+                    Math.pow(l.getNumericResult(), r.getNumericResult())
+            );
+        }
+
         if (right instanceof Const r && r.isOne()) {
             return left;
         }

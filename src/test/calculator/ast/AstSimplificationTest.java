@@ -12,7 +12,7 @@ public class AstSimplificationTest {
 
     @Test
     public void testPow() {
-        AST tree = new Pow(
+        AST zeroPow = new Pow(
                 new Variable(),
                 new Pow(
                         new Variable(),
@@ -22,7 +22,14 @@ public class AstSimplificationTest {
 
         AST expected = new Variable();
 
-        assertEquals(expected, tree.simplify());
+        assertEquals(expected, zeroPow.simplify());
+
+        AST numPow = new Pow(
+                new Const(2),
+                new Const(3)
+        );
+
+        assertEquals(new Const(8), numPow.simplify());
     }
 
     @Test
@@ -157,5 +164,129 @@ public class AstSimplificationTest {
                 new Const(13),
                 new Variable()
         ), leftNestedR.simplify());
+    }
+
+    @Test
+    public void testMultiplication() {
+        AST multiplyByZero = new Multiplication(
+                new Const(0),
+                new Variable()
+        );
+
+        assertEquals(new Const(0), multiplyByZero.simplify());
+
+        AST leftOne = new Multiplication(
+                new Const(1),
+                new Variable()
+        );
+
+        assertEquals(new Variable(), leftOne.simplify());
+
+        AST rightOne = new Multiplication(
+                new Variable(),
+                new Const(1)
+        );
+
+        assertEquals(new Variable(), rightOne.simplify());
+
+        AST doubleNegate = new Multiplication(
+                new Negate(new Variable()),
+                new Negate(new Const(3))
+        );
+
+        assertEquals(new Multiplication(
+                new Variable(),
+                new Const(3)
+        ), doubleNegate.simplify());
+
+        AST leftNegate = new Multiplication(
+                new Negate(new Const(3)),
+                new Const(2)
+        );
+
+        assertEquals(new Negate(new Const(6)), leftNegate.simplify());
+
+        AST rightNegate = new Multiplication(
+                new Const(2),
+                new Negate(new Const(3))
+        );
+
+        assertEquals(new Negate(new Const(6)), rightNegate.simplify());
+
+        AST rightNestedL = new Multiplication(
+                new Const(2),
+                new Multiplication(
+                        new Const(4),
+                        new Variable()
+                )
+        );
+
+        assertEquals(new Multiplication(
+                new Const(8),
+                new Variable()
+        ), rightNestedL.simplify());
+
+        AST rightNestedR = new Multiplication(
+                new Const(2),
+                new Multiplication(
+                        new Variable(),
+                        new Const(4)
+                )
+        );
+
+        assertEquals(new Multiplication(
+                new Const(8),
+                new Variable()
+        ), rightNestedR.simplify());
+
+        AST leftNestedL = new Multiplication(
+                new Multiplication(
+                        new Const(4),
+                        new Variable()
+                ),
+                new Const(5)
+        );
+
+        assertEquals(new Multiplication(
+                new Const(20),
+                new Variable()
+        ), leftNestedL.simplify());
+
+        AST leftNestedR = new Multiplication(
+                new Multiplication(
+                        new Variable(),
+                        new Const(4)
+                ),
+                new Const(5)
+        );
+
+        assertEquals(new Multiplication(
+                new Const(20),
+                new Variable()
+        ), leftNestedR.simplify());
+
+    }
+
+    @Test
+    public void testDefaultSimplifications() {
+        AST tree = new Sin(
+                new Pow(
+                        new Substraction(
+                                new Const(1),
+                                new Variable()
+                        ),
+                        new Variable()
+                )
+        );
+
+        assertEquals(new Sin(
+                new Pow(
+                        new Substraction(
+                                new Const(1),
+                                new Variable()
+                        ),
+                        new Variable()
+                )
+        ), tree.simplify());
     }
 }
