@@ -56,13 +56,106 @@ public class AstSimplificationTest {
 
     @Test
     public void testDivision () {
-        AST zero = new Negate(new Const(0));
+        AST doubleNegate = new Division(
+                new Negate(new Const(1)),
+                new Negate(new Const(3))
+        );
 
-        assertEquals(new Const(0), zero.simplify());
+        assertEquals(new Const(1/3.), doubleNegate.simplify());
 
-        AST nested = new Negate(new Negate(new Variable()));
+        AST leftNegate = new Division(
+                new Negate(new Variable()),
+                new Const(1)
+        );
 
-        assertEquals(new Variable(), nested.simplify());
+        assertEquals(new Negate(new Variable()), leftNegate.simplify());
+
+        AST rightNegate = new Division(
+                new Const(2),
+                new Negate(new Variable())
+        );
+
+        assertEquals(new Negate(
+                new Division(
+                        new Const(2),
+                        new Variable()
+                )
+        ), rightNegate.simplify());
     }
 
+    @Test
+    public void testAddition() {
+        AST leftZero = new Addition(
+                new Const(0),
+                new Variable()
+        );
+
+        assertEquals(new Variable(), leftZero.simplify());
+
+        AST rightZero = new Addition(
+                new Variable(),
+                new Const(0)
+        );
+
+        assertEquals(new Variable(), rightZero.simplify());
+
+        AST bothNumbers = new Addition(
+                new Const(4),
+                new Const(2)
+        );
+
+        assertEquals(new Const(6), bothNumbers.simplify());
+
+        AST rightNestedL = new Addition(
+                new Const(5),
+                new Addition(
+                        new Const(1),
+                        new Variable()
+                )
+        );
+
+        assertEquals(new Addition(
+                new Const(6),
+                new Variable()
+        ), rightNestedL.simplify());
+
+        AST rightNestedR = new Addition(
+                new Const(5),
+                new Addition(
+                        new Variable(),
+                        new Const(1)
+                )
+        );
+
+        assertEquals(new Addition(
+                new Const(6),
+                new Variable()
+        ), rightNestedR.simplify());
+
+        AST leftNestedL = new Addition(
+                new Addition(
+                        new Const(4),
+                        new Variable()
+                ),
+                new Const(9)
+        );
+
+        assertEquals(new Addition(
+                new Const(13),
+                new Variable()
+        ), leftNestedL.simplify());
+
+        AST leftNestedR = new Addition(
+                new Addition(
+                        new Variable(),
+                        new Const(4)
+                ),
+                new Const(9)
+        );
+
+        assertEquals(new Addition(
+                new Const(13),
+                new Variable()
+        ), leftNestedR.simplify());
+    }
 }
