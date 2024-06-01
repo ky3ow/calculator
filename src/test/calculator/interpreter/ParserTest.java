@@ -82,11 +82,11 @@ public class ParserTest {
         AST resultTree = parser.expr();
         AST expected = new Division(
                 new Multiplication(
-                    new Const(2),
-                    new Substraction(
-                            new Const(5),
-                            new Const(1)
-                    )
+                        new Const(2),
+                        new Substraction(
+                                new Const(5),
+                                new Const(1)
+                        )
                 ),
                 new Const(3)
         );
@@ -136,6 +136,69 @@ public class ParserTest {
         AST expected = new Negate(
                 new Sin(
                         new Variable()
+                )
+        );
+
+        assertEquals(expected, resultTree);
+    }
+
+    @Test
+    public void testFunctions() {
+        ArrayList<Token> tokens = new ArrayList<>();
+        tokens.add(new Token("FUNC", "asin"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "cos"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "acos"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "tan"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "atan"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "cot"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "acot"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "√"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "exp"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("FUNC", "log"));
+        tokens.add(new Token("L_PAREN", "("));
+        tokens.add(new Token("VARIABLE", "x"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+        tokens.add(new Token("R_PAREN", ")"));
+
+        parser.setInput(tokens);
+
+        AST resultTree = parser.expr();
+        AST expected = new Asin(
+                new Cos(
+                        new Acos(
+                                new Tan(
+                                        new Atan(
+                                                new Cot(
+                                                        new Acot(
+                                                                new Sqrt(
+                                                                        new Exp(
+                                                                                new Log(
+                                                                                        new Variable()
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
                 )
         );
 
