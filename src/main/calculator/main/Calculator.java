@@ -34,14 +34,12 @@ public class Calculator implements ActionListener {
             decButton = new JButton("."),
             powButton = new JButton("^"),
             equButton = new JButton("d/dx f(x)"),
-
-    xButton = new JButton("x"),
+            xButton = new JButton("x"),
             eButton = new JButton("e"),
             piButton = new JButton("π"),
             delButton = new JButton("<<<"),
             clrButton = new JButton("C"),
-
-    sinButton = new JButton("sin"),
+            sinButton = new JButton("sin"),
             cosButton = new JButton("cos"),
             asinButton = new JButton("asin"),
             acosButton = new JButton("acos"),
@@ -51,10 +49,8 @@ public class Calculator implements ActionListener {
             acotButton = new JButton("acot"),
             logButton = new JButton("log"),
             sqrtButton = new JButton("√"),
-
-    leftParenButton = new JButton("("),
+            leftParenButton = new JButton("("),
             rightParenButton = new JButton(")");
-
     JButton[] functionButtons = {
             addButton,
             subButton,
@@ -87,6 +83,10 @@ public class Calculator implements ActionListener {
     JPanel numPanel;
     JPanel opPanel;
 
+    private final Parser parser = new Parser();
+
+    private final ArrayList<Pair> history = new ArrayList<>();
+
     Calculator() {
 
         frame = new JFrame("Calculator");
@@ -113,7 +113,7 @@ public class Calculator implements ActionListener {
 
         changeState = new JButton("X");
         changeState.addActionListener(this);
-        changeState.setBackground(new Color(255,75,75));
+        changeState.setBackground(new Color(255, 75, 75));
         changeState.setBounds(10, 25, 40, 50);
         changeState.setBorder(inputField.getBorder());
 
@@ -135,7 +135,7 @@ public class Calculator implements ActionListener {
 
         varPanel = new JPanel();
         varPanel.setBounds(10, 140, 370, 30);
-        varPanel.setLayout(new GridLayout(1,5,12,0));
+        varPanel.setLayout(new GridLayout(1, 5, 12, 0));
         varPanel.add(xButton);
         varPanel.add(eButton);
         varPanel.add(piButton);
@@ -144,7 +144,7 @@ public class Calculator implements ActionListener {
 
         funcPanel = new JPanel();
         funcPanel.setBounds(10, 180, 370, 70);
-        funcPanel.setLayout(new GridLayout(2,5,12,5));
+        funcPanel.setLayout(new GridLayout(2, 5, 12, 5));
         funcPanel.add(sinButton);
         funcPanel.add(cosButton);
         funcPanel.add(tanButton);
@@ -158,7 +158,7 @@ public class Calculator implements ActionListener {
 
         numPanel = new JPanel();
         numPanel.setBounds(10, 270, 220, 290);
-        numPanel.setLayout(new GridLayout(4,3,5,5));
+        numPanel.setLayout(new GridLayout(4, 3, 5, 5));
         numPanel.add(numberButtons[7]);
         numPanel.add(numberButtons[8]);
         numPanel.add(numberButtons[9]);
@@ -174,7 +174,7 @@ public class Calculator implements ActionListener {
 
         opPanel = new JPanel();
         opPanel.setBounds(255, 270, 124, 215);
-        opPanel.setLayout(new GridLayout(3,2,5,5));
+        opPanel.setLayout(new GridLayout(3, 2, 5, 5));
         opPanel.add(addButton);
         opPanel.add(subButton);
         opPanel.add(mulButton);
@@ -200,7 +200,7 @@ public class Calculator implements ActionListener {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         new Calculator();
     }
 
@@ -212,41 +212,41 @@ public class Calculator implements ActionListener {
             if (button.equals(equButton)) {   // 1
 
                 if (inputField.getText().isEmpty()) inputField.setText("0");
-                String text = inputField.getText();
-                ArrayList<Token> tokens = Tokenizer.TokenizeExpression(text);
-                Parser par = new Parser();
-                par.setInput(tokens);
+                String input = inputField.getText();
+                ArrayList<Token> tokens = Tokenizer.TokenizeExpression(input);
+                parser.setInput(tokens);
                 String output;
-                AST derivative = par.expr().getDerivative().simplify();
+                AST derivative = parser.expr().getDerivative().simplify();
                 System.out.println(derivative);
 
-                if (state.equals("symbolic")){ // 2
+                if (state.equals("symbolic")) { // 2
                     output = derivative.getStringRepresentation();
                 } else {
                     if (setVariable.getText().isEmpty()) setVariable.setText("0");
                     double value = Double.parseDouble(setVariable.getText());
-                    output = "" + derivative.getNumericResult(value);
+                    output = String.valueOf(derivative.getNumericResult(value));
                 }
 
                 if (output.equals("NaN")) output = "Ділення на 0 або корінь з від'ємного числа";
                 outputField.setText(output);
+                history.add(new Pair(input, output));
 
             } else if (button.equals(changeState)) { // 3
 
                 if (state.equals("symbolic")) {
                     state = "numeric";
-                    button.setBackground(new Color(117,255,121));
+                    button.setBackground(new Color(117, 255, 121));
                     setVariable.setEditable(true);
                 } else {
                     state = "symbolic";
-                    button.setBackground(new Color(255,75,75));
+                    button.setBackground(new Color(255, 75, 75));
                     setVariable.setEditable(false);
                 }
 
             } else if (button.equals(delButton)) { // 4
 
-                String text = inputField.getText();
-                inputField.setText(text.substring(0, text.length()-1));
+                String input = inputField.getText();
+                inputField.setText(input.substring(0, input.length() - 1));
                 if (inputField.getText().isEmpty()) inputField.setText("0");
 
             } else if (button.equals(clrButton)) { // 5
@@ -255,15 +255,9 @@ public class Calculator implements ActionListener {
                 outputField.setText("0");
 
             } else if (button.equals(showMore)) { // 6
-                JTextArea text = new JTextArea(5,40);
-                text.setText(outputField.getText());
-                text.setEditable(false);
-                JScrollPane scroll = new JScrollPane(text);
-                text.setLineWrap(true);
-                text.setFont(font);
-                JOptionPane.showMessageDialog(null, scroll, "Похiдна", JOptionPane.INFORMATION_MESSAGE);
+                new HistoryDialog(frame, history);
             } else { // 7
-                if (inputField.getText().equals("0")){
+                if (inputField.getText().equals("0")) {
                     inputField.setText(button.getText());
                 } else {
                     inputField.setText(inputField.getText().concat(button.getText()));
