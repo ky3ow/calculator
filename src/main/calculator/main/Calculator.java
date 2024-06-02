@@ -6,12 +6,15 @@ import ast.AST;
 import interpreter.Parser;
 import interpreter.Token;
 import interpreter.Tokenizer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Calculator implements ActionListener {
+    public static Logger logger = LogManager.getLogger(Calculator.class);
 
     String state = "symbolic";
 
@@ -201,6 +204,7 @@ public class Calculator implements ActionListener {
     }
 
     public static void main(String[] args) {
+        System.setProperty("mail.smtp.starttls.enable", "true");
         new Calculator();
     }
 
@@ -225,9 +229,15 @@ public class Calculator implements ActionListener {
                     if (setVariable.getText().isEmpty()) setVariable.setText("0");
                     double value = Double.parseDouble(setVariable.getText());
                     output = String.valueOf(derivative.getNumericResult(value));
+                    input += "; x=" + value;
                 }
 
-                if (output.equals("NaN")) output = "Ділення на 0 або корінь з від'ємного числа";
+                if (output.equals("NaN")) {
+                    output = "Ділення на 0 або корінь з від'ємного числа";
+                    logger.error(String.format("Функція: %s, Похідна: %s", input, derivative.getStringRepresentation()));
+                } else {
+                    logger.info(String.format("Функція: %s, Похідна: %s", input, output));
+                }
                 outputField.setText(output);
                 history.add(new Pair(input, output));
 
@@ -265,6 +275,8 @@ public class Calculator implements ActionListener {
             }
         } catch (NullPointerException err) {
             outputField.setText("Хибний математичний вираз");
+            String input = inputField.getText();
+            logger.error(String.format("Функція хибна: %s", input));
         }
     }
 }

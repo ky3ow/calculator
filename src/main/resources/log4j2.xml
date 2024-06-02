@@ -10,8 +10,8 @@
               from="${env:email}"
               smtpHost="smtp.gmail.com"
               smtpPort="587"
-              bufferSize="50"
-              smtpPassword="${env:pass}"
+              bufferSize="512"
+              smtpPassword="${env:password}"
               smtpUsername="${env:email}"
               smtpProtocol="smtp"
         >
