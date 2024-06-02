@@ -12,9 +12,12 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Calculator implements ActionListener {
     public static Logger logger = LogManager.getLogger(Calculator.class);
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     String state = "symbolic";
 
@@ -208,6 +211,12 @@ public class Calculator implements ActionListener {
         new Calculator();
     }
 
+    public static void logErrorAsync(String message) {
+        executorService.submit(() -> {
+            logger.error(message);
+        });
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -234,7 +243,7 @@ public class Calculator implements ActionListener {
 
                 if (output.equals("NaN")) {
                     output = "Ділення на 0 або корінь з від'ємного числа";
-                    logger.error(String.format("Функція: %s, Похідна: %s", input, derivative.getStringRepresentation()));
+                    logErrorAsync(String.format("Функція: %s, Похідна: %s", input, derivative.getStringRepresentation()));
                 } else {
                     logger.info(String.format("Функція: %s, Похідна: %s", input, output));
                 }
@@ -276,7 +285,7 @@ public class Calculator implements ActionListener {
         } catch (NullPointerException err) {
             outputField.setText("Хибний математичний вираз");
             String input = inputField.getText();
-            logger.error(String.format("Функція хибна: %s", input));
+            logErrorAsync(String.format("Функція хибна: %s", input));
         }
     }
 }
